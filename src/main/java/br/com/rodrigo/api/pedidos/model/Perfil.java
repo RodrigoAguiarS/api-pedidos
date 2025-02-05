@@ -25,7 +25,4 @@ public class Perfil extends EntidadeBase {
 
     @Column(name = "descricao")
     private String descricao;
-
-    @Column(name = "ativo")
-    private Boolean ativo;
 }

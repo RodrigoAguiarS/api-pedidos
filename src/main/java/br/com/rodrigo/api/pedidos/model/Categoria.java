@@ -19,7 +19,4 @@ public class Categoria extends EntidadeBase {
 
     @Column(name = "descricao")
     private String descricao;
-
-    @Column(name = "ativo")
-    private Boolean ativo;
 }

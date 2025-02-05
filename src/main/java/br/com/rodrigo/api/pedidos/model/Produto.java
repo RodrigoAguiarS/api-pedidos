@@ -34,9 +34,6 @@ public class Produto extends EntidadeBase {
     @Column(name = "imagem_url")
     private String imagemUrl;
 
-    @Column(name = "ativo")
-    private Boolean ativo;
-
     @Column(name = "quantidade")
     private Integer quantidade;
 
