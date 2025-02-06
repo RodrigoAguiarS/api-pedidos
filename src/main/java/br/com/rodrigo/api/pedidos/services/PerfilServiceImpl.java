@@ -9,6 +9,7 @@ import br.com.rodrigo.api.pedidos.repository.PerfilRepository;
 import br.com.rodrigo.api.pedidos.repository.UsuarioRepository;
 import br.com.rodrigo.api.pedidos.util.ModelMapperUtil;
 import org.springframework.stereotype.Service;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 @Service
 public class PerfilServiceImpl extends GenericServiceImpl<Perfil, PerfilForm, PerfilResponse> {
@@ -21,9 +22,14 @@ public class PerfilServiceImpl extends GenericServiceImpl<Perfil, PerfilForm, Pe
     }
 
     @Override
+    protected String getEntidadeNome() {
+        return "Perfil";
+    }
+
+    @Override
     protected Perfil criarEntidade(PerfilForm perfilForm, Long id) {
         Perfil perfil = ModelMapperUtil.map(perfilForm, Perfil.class);
-        if(id != null) {
+        if(isNotEmpty(id)) {
             perfil.setId(id);
         }
         return perfil;
@@ -45,7 +51,12 @@ public class PerfilServiceImpl extends GenericServiceImpl<Perfil, PerfilForm, Pe
     }
 
     @Override
-    protected void validarExclusao(Long id) {
+    public void apagar(Long id) {
+        validarExclusao(id);
+        repository.deleteById(id);
+    }
+
+    private void validarExclusao(Long id) {
         boolean existeUsuario = usuarioRepository.existsByPerfisId(id);
         if (existeUsuario) {
             throw new ViolacaoIntegridadeDadosException(MensagensError.PERFIL_POSSUI_USUARIO.getMessage());

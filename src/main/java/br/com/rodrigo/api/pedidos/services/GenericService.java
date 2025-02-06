@@ -1,6 +1,7 @@
 package br.com.rodrigo.api.pedidos.services;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 
 public interface GenericService<Form, Response> {
@@ -11,7 +12,7 @@ public interface GenericService<Form, Response> {
 
     Response obterPorId(Long id);
 
-    List<Response> listarTodos();
+    Page<Response> listarTodos(Pageable pageable);
 
     void apagar(Long id);
 

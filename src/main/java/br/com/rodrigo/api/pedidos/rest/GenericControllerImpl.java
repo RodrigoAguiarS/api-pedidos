@@ -1,9 +1,11 @@
 package br.com.rodrigo.api.pedidos.rest;
 import br.com.rodrigo.api.pedidos.services.GenericService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import java.util.List;
+import org.springframework.data.domain.Page;
+
 
 
 public abstract class GenericControllerImpl<Form, Response> implements GenericController<Form, Response> {
@@ -33,8 +35,8 @@ public abstract class GenericControllerImpl<Form, Response> implements GenericCo
     }
 
     @Override
-    public ResponseEntity<List<Response>> listarTodos() {
-        List<Response> responses = service.listarTodos();
+    public ResponseEntity<Page<Response>> listarTodos(Pageable pageable) {
+        Page<Response> responses = service.listarTodos(pageable);
         return ResponseEntity.ok(responses);
     }
 
