@@ -5,15 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsuarioResponse {
+public class PessoaResponse {
     private Long id;
-    private String email;
-    private PessoaResponse pessoa;
-    private Set<PerfilResponse> perfis;
+    private String nome;
+    private String cpf;
+    private String telefone;
 }

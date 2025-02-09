@@ -1,10 +1,7 @@
 package br.com.rodrigo.api.pedidos.model;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,8 +29,4 @@ public class Pessoa extends EntidadeBase {
     @Column(name = "data_nascimento")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataNascimento;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_endereco")
-    private Endereco endereco;
 }

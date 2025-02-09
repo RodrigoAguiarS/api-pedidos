@@ -2,7 +2,6 @@ package br.com.rodrigo.api.pedidos.services;
 
 import br.com.rodrigo.api.pedidos.exception.MensagensError;
 import br.com.rodrigo.api.pedidos.exception.ObjetoNaoEncontradoException;
-import br.com.rodrigo.api.pedidos.model.Endereco;
 import br.com.rodrigo.api.pedidos.model.Perfil;
 import br.com.rodrigo.api.pedidos.model.Pessoa;
 import br.com.rodrigo.api.pedidos.model.Usuario;
@@ -11,6 +10,10 @@ import br.com.rodrigo.api.pedidos.model.response.PerfilResponse;
 import br.com.rodrigo.api.pedidos.model.response.UsuarioResponse;
 import br.com.rodrigo.api.pedidos.repository.UsuarioRepository;
 import br.com.rodrigo.api.pedidos.util.ModelMapperUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,6 +52,12 @@ public class UsuarioServiceImpl extends GenericServiceImpl<Usuario, UsuarioForm,
         return usuario;
     }
 
+    public Page<UsuarioResponse> listarTodos(int page, int size, String sort, String email, String nome, String cpf, Long perfilId) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort != null ? sort : "id"));
+        Page<Usuario> usuarios = usuarioRepository.findAll(email, nome, cpf, perfilId, pageable);
+        return usuarios.map(usuario -> ModelMapperUtil.map(usuario, UsuarioResponse.class));
+    }
+
     private Usuario buscarOuCriarUsuario(Long id) {
         return (id != null) ? repository.findById(id)
                 .orElseThrow(() -> new ObjetoNaoEncontradoException(
@@ -65,12 +74,6 @@ public class UsuarioServiceImpl extends GenericServiceImpl<Usuario, UsuarioForm,
         }
 
         ModelMapperUtil.map(usuarioForm, usuario.getPessoa());
-
-        if (usuario.getPessoa().getEndereco() == null) {
-            usuario.getPessoa().setEndereco(new Endereco());
-        }
-
-        ModelMapperUtil.map(usuarioForm, usuario.getPessoa().getEndereco());
     }
 
     private void configurarPerfis(Usuario usuario, Long perfilId) {
@@ -81,12 +84,7 @@ public class UsuarioServiceImpl extends GenericServiceImpl<Usuario, UsuarioForm,
 
     @Override
     protected UsuarioResponse construirDto(Usuario usuario) {
-        return new UsuarioResponse(
-                usuario.getId(),
-                usuario.getEmail(),
-                usuario.getPessoa().getNome(),
-                usuario.getPerfis().stream().map(Perfil::getNome).toList()
-        );
+        return ModelMapperUtil.map(usuario, UsuarioResponse.class);
     }
 
     @Override
